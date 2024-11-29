@@ -3,7 +3,6 @@ import logo from "./assets/todo.png";
 import logo1 from "./assets/logo2.svg";
 
 export default function App() {
-  // Boshlang'ich state
   const initialState = {
     name: "",
     email: "",
@@ -17,16 +16,13 @@ export default function App() {
   };
 
   const [companyData, setCompanyData] = useState(initialState);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submittedData, setSubmittedData] = useState(null); // Yuborilgan ma'lumotlarni saqlash
+  const [submittedData, setSubmittedData] = useState([]); 
 
-  // Input qiymatlarini yangilash funksiyasi
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCompanyData({ ...companyData, [name]: value });
   };
 
-  // Rasm yuklash funksiyasi
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -34,17 +30,14 @@ export default function App() {
     }
   };
 
-  // Formani yuborish funksiyasi
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmittedData(companyData); // Yuborilgan ma'lumotlarni saqlash
-    setIsSubmitted(true);
-    setCompanyData(initialState); // Formani tozalash
+    setSubmittedData([...submittedData, companyData]); 
+    setCompanyData(initialState); 
   };
 
   return (
     <div>
-      {/* Header bo'limi */}
       <header className="bg-blue-700 mb-14 p-5 flex justify-between items-center">
         <img src={logo1} alt="Logo" />
         <nav>
@@ -67,11 +60,9 @@ export default function App() {
         </div>
       </header>
 
-      {/* Forma bo'limi */}
       <main className="bg-white rounded-lg shadow-md w-[778px] m-auto p-8">
         <h1 className="font-bold text-2xl mb-5">Kompaniya ma’lumotlari</h1>
         <form onSubmit={handleSubmit}>
-          {/* Rasm yuklash */}
           <div className="flex items-center gap-3 mb-5">
             <img
               src={companyData.image}
@@ -84,7 +75,6 @@ export default function App() {
             </label>
           </div>
 
-          {/* Inputlar */}
           {[
             { label: "Kompaniya nomi", name: "name", type: "text", placeholder: "Kompaniya nomi" },
             { label: "Email", name: "email", type: "email", placeholder: "Email" },
@@ -106,7 +96,6 @@ export default function App() {
             </div>
           ))}
 
-          {/* Selectlar */}
           <div className="flex gap-5 mb-5">
             <select
               className="select w-full"
@@ -134,7 +123,6 @@ export default function App() {
             </select>
           </div>
 
-          {/* Textarea */}
           <div className="mb-5">
             <label className="block mb-1 font-medium">Izoh *</label>
             <textarea
@@ -147,7 +135,6 @@ export default function App() {
             ></textarea>
           </div>
 
-          {/* Tugmalar */}
           <div className="flex justify-between">
             <button type="button" className="btn btn-outline">Ortga</button>
             <button type="submit" className="btn btn-primary">Keyingisi</button>
@@ -155,25 +142,28 @@ export default function App() {
         </form>
       </main>
 
-      {/* Karta ko'rinishi */}
-      {isSubmitted && submittedData && (
-        <section className="card bg-base-100 w-96 shadow-xl m-auto mt-10">
-          <figure>
-            <img
-              src={submittedData.image}
-              alt="Uploaded"
-              className="w-full h-48 object-cover"
-            />
-          </figure>
-          <div className="card-body">
-            <h2 className="card-title">{submittedData.name}</h2>
-            <p>{submittedData.description}</p>
-            <p><strong>Email:</strong> {submittedData.email}</p>
-            <p><strong>Telefon:</strong> {submittedData.phone}</p>
-            <p><strong>Davlat:</strong> {submittedData.country}</p>
-            <p><strong>Shahar:</strong> {submittedData.city}</p>
-            <p><strong>Hodimlar:</strong> {submittedData.employees}</p>
-          </div>
+      {submittedData.length > 0 && (
+        <section className="mt-10">
+          {submittedData.map((data, index) => (
+            <div key={index} className="card bg-base-100 w-96 shadow-xl m-auto mt-5">
+              <figure>
+                <img
+                  src={data.image}
+                  alt="Uploaded"
+                  className="w-full h-48 object-cover"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">{data.name}</h2>
+                <p>{data.description}</p>
+                <p><strong>Email:</strong> {data.email}</p>
+                <p><strong>Telefon:</strong> {data.phone}</p>
+                <p><strong>Davlat:</strong> {data.country}</p>
+                <p><strong>Shahar:</strong> {data.city}</p>
+                <p><strong>Hodimlar:</strong> {data.employees}</p>
+              </div>
+            </div>
+          ))}
         </section>
       )}
     </div>
